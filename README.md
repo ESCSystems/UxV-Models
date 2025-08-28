@@ -12,6 +12,7 @@ After downloading the repository, unzip them in a selected directory.
 <img src="documentation/Fig2.png" alt="drawing" width="50%" height="400"/>
 
 To run the software, you must have a MATLAB and Simulink license (the software was tested using version MATLAB2022). After launching the MATLAB environment, navigate to the directory containing the models and append the model subdirectories to the main model. 
+Example name: Test_r17.slx
 
 <img src="documentation/Fig3.png" alt="drawing" width="50%" height="450"/>
 
