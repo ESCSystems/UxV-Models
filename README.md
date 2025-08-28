@@ -18,7 +18,7 @@ To run the software, you must have a MATLAB and Simulink license (the software w
 Next, launch the Simulink environment. After launching Simulink, open the test_r17 project. The example allows users to run their own simulations of a system for which a sensor model has been added, such as a magnetometer or GPS. The example models are located in one of the blocks of the main Simulink model. 
 Before running the model, specify the simulation length in seconds. If the "inf" value is entered, the simulation will be terminated upon user request. 
 
-[Read model description](documentation/README.md)
+[Project documentation](documentation/README.md)
 
 
 
