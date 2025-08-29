@@ -1,0 +1,45 @@
+function [CLa] = CLa_from_table(pochodne,idx1,idx2,Alfa,DelH,DelF,q,cref,TAS,az)
+
+% współczynnik siły oporu w układzie związanym z opływem
+% pochodne - struktura tablicy z pochodnymi aerodynamicznymi
+% idx1,idx2 - index z tablicy wyznaczany na podstawie kąta natarcia
+% Alfa - kąt natarcia [deg]
+% DelH - kąt wychylenia steru wysokości (H - horizontal) [deg]
+% DelF - kąt wychylenia klap (F - flap) [deg]
+% q - prędkość kątowa pochylenia[rad/s]
+% cref - średnia cięciwa referenycjna [m]
+% IAS - prędkość względem ośrodka [m/s]
+
+% Alfa0=pochodne.Alfa(idx1);
+DelH0 =  InterpolateDerivativesFromClosest(pochodne.Alfa,pochodne.DelH,Alfa,idx1,idx2);
+DelF0 = InterpolateDerivativesFromClosest(pochodne.Alfa,pochodne.DelF1,Alfa,idx1,idx2);
+
+if(TAS~=0)
+    Q = (q*cref)/(2*TAS);
+    dAp = (cref*az)/(2*TAS^2); % zapytać KK czy nie powinna być różniczka z Q
+else
+    dAp = 0;
+    Q = 0;
+end
+
+persistent wsp; 
+if isempty(wsp)
+    wsp = polyfit(pochodne.Alfa,pochodne.CL,3);
+end
+CL = polyval(wsp,Alfa);
+
+% CL = InterpolateDerivativesFromClosest(pochodne.Alfa,pochodne.CL,Alfa,idx1,idx2);
+% dCL_dAlfa = InterpolateDerivativesFromClosest(pochodne.Alfa,pochodne.dCL_dAlfa,Alfa,idx1,idx2);
+dCL_dDelH = InterpolateDerivativesFromClosest(pochodne.Alfa,pochodne.dCL_dDelH,Alfa,idx1,idx2);
+dCL_dDelF = InterpolateDerivativesFromClosest(pochodne.Alfa,pochodne.dCL_dDelF,Alfa,idx1,idx2);
+dCL_dQ = InterpolateDerivativesFromClosest(pochodne.Alfa,pochodne.dCL_dQ,Alfa,idx1,idx2);
+
+dCL_dAp = InterpolateDerivativesFromClosest(pochodne.Alfa,pochodne.dCL_dAp,Alfa,idx1,idx2);
+
+
+% CLa = CL + dCL_dAlfa*(Alfa-Alfa0)*pi/180 + dCL_dDelH*(DelH-DelH0)*pi/180 + dCL_dDelF*(DelF-DelF0)*pi/180+dCL_dQ*Q + dCL_dAp*dAp;
+CLa = CL + dCL_dDelH*(DelH-DelH0)*pi/180 + dCL_dDelF*(DelF-DelF0)*pi/180+dCL_dQ*Q + dCL_dAp*dAp;
+CLa = CL + dCL_dDelH*DelH*pi/180 + dCL_dDelF*DelF*pi/180+dCL_dQ*Q + dCL_dAp*dAp;
+
+end
+
