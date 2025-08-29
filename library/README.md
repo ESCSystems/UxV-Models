@@ -1,1 +1,1 @@
-Catalog with auxiliary functions.
+Catalog with the auxiliary functions.
